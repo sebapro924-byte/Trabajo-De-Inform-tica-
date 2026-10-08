@@ -1,0 +1,4 @@
+streamlit>=1.41
+faster-whisper>=1.0
+transformers>=4.40
+torch
