@@ -1,3 +1,4 @@
+
 """Lectura en voz alta con IA — Español, Inglés y Guaraní.
 
 Funciona de dos formas con este mismo archivo:
@@ -657,7 +658,9 @@ def promedio(lista):
 # Panel izquierdo: configuración (o resumen mientras se juega)
 # ------------------------------------------------------------------
 def empezar_partida():
-    modo, idioma, nivel = S.cfg_modo, S.cfg_idioma, S.cfg_nivel
+    modo = S.cfg_modo or "Solo"
+    idioma = S.cfg_idioma or "Español"
+    nivel = S.cfg_nivel or "Normal"
     S.modo, S.idioma, S.nivel_sel = modo, idioma, nivel
     S.turno, S.ronda = 0, 0
     if modo == "Solo":
@@ -671,7 +674,7 @@ def empezar_partida():
         S.racha = []
         S.frase = elegir_frase(idioma, S.nivel_actual)
     else:
-        n, rondas = S.cfg_n, S.cfg_rondas
+        n, rondas = S.cfg_n or 2, S.cfg_rondas or 3
         limpios, vistos = [], {}
         for i in range(n):
             nom = S[f"jug_{i}"].strip() or f"Jugador {i + 1}"
@@ -716,19 +719,13 @@ def panel_izquierdo():
     st.pills("Idioma", IDIOMAS, key="cfg_idioma")
     st.pills("Dificultad", OPCIONES_NIVEL, key="cfg_nivel")
     st.caption(DESCRIPCION.get(S.cfg_nivel or "Normal", ""))
-    if S.cfg_modo == "Partida local":
+    if (S.cfg_modo or "Solo") == "Partida local":
         st.pills("Jugadores", [2, 3, 4, 5, 6], key="cfg_n")
         for i in range(S.cfg_n or 2):
             st.text_input(f"Jugador {i + 1}", key=f"jug_{i}")
         st.pills("Rondas", [3, 5], key="cfg_rondas")
     else:
         st.text_input("Tu nombre", key="cfg_nombre")
-    # Si alguna opción quedó sin elegir, se usa el valor por defecto
-    S.cfg_modo = S.cfg_modo or "Solo"
-    S.cfg_idioma = S.cfg_idioma or "Español"
-    S.cfg_nivel = S.cfg_nivel or "Normal"
-    S.cfg_n = S.cfg_n or 2
-    S.cfg_rondas = S.cfg_rondas or 3
     if st.button("▶ Empezar", type="primary"):
         empezar_partida()
 
